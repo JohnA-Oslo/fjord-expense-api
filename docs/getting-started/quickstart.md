@@ -44,7 +44,7 @@ curl -H "X-API-Key: $FJORD_API_KEY" \
      https://sandbox.fjordexpense.example.com/v1/categories
 ```
 
-Typical response shape:
+A typical response shape is:
 
 ```json
 {
@@ -81,7 +81,7 @@ curl -X POST \
   }'
 ```
 
-The response includes the expense ID (for example `exp_1a2b3c4d5e`). Save this for the next steps.
+The response includes the expense ID (for example, `exp_1a2b3c4d5e`). Save this for the next steps.
 
 ### Step 3: Upload a receipt and attach it to the expense
 
@@ -96,11 +96,11 @@ curl -X POST \
   -F "expense_id=exp_1a2b3c4d5e"
 ```
 
-The response includes a `receipt_id` (for example `rec_xyz789`). You can later download this using the download endpoint.
+The response includes a `receipt_id` (for example, `rec_xyz789`). You can download this later using the `download` endpoint.
 
 ### Step 4: Submit the expense for approval
 
-Submitting changes the expense status from `draft` to `submitted` (assuming it passes validation).
+Submitting the expense changes the expense status from `draft` to `submitted` (assuming it passes validation).
 
 ```bash
 curl -X POST \
@@ -152,7 +152,7 @@ The `GET /expenses` endpoint supports filtering (for example by `status`, `emplo
 - `data`: array of expenses
 - `pagination`: `{ limit, offset, total, has_more }`
 
-Example:
+**Example:**
 
 ```bash
 curl -H "X-API-Key: $FJORD_API_KEY" \
