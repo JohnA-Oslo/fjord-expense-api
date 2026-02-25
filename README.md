@@ -1,12 +1,10 @@
 # Fjord Expense API documentation
 
-Playground and demo API doc site for testing out ideas etc.
+Playground and demo API doc site for testing out ideas etc. Uses:
 
-Using MkDocs and slightly customized Material theme.
-
-Using Vale to check against Microsoft style guidelines.
-
-Using Claude Code for rules checking prior to pushing changes to remote. 
+- MkDocs and slightly customized Material theme.
+- Vale to check against Microsoft style guidelines.
+- Claude Code and Skills for rules checking prior to pushing changes to remote. 
 
 ## Project structure
 
