@@ -1,0 +1,34 @@
+# Fjord Expense API
+
+> A fictional expense management API for test and demo purposes. 
+> Experiemnts and demos modern API doc practices.
+
+## Documentation
+
+- [Home](https://johna-oslo.github.io/fjord-expense-api/): Overview and getting started
+- [Quick Start](https://johna-oslo.github.io/fjord-expense-api/getting-started/quickstart/): First API call
+- [Authentication](https://johna-oslo.github.io/fjord-expense-api/getting-started/authentication/): API key authentication
+- [Rate Limits](https://johna-oslo.github.io/fjord-expense-api/getting-started/rate-limits/): Usage limits and best practices
+
+## Guides
+
+- [Expenses](https://johna-oslo.github.io/fjord-expense-api/guides/expenses/): Create and manage expense entries
+- [Receipts](https://johna-oslo.github.io/fjord-expense-api/guides/receipts/): Upload and manage receipt attachments
+- [Approvals](https://johna-oslo.github.io/fjord-expense-api/guides/approvals/): Expense approval workflows
+- [Invoicing](https://johna-oslo.github.io/fjord-expense-api/guides/invoicing/): Generate invoices from approved expenses
+
+## Reference
+
+- [API Reference](https://johna-oslo.github.io/fjord-expense-api/api-reference/): Complete endpoint documentation
+- [Webhooks](https://johna-oslo.github.io/fjord-expense-api/webhooks/): Event notifications
+- [Errors](https://johna-oslo.github.io/fjord-expense-api/errors/): Error codes and handling
+
+## Key concepts
+
+- Expenses require at least one receipt before submission
+- Amounts are strings with up to 2 decimal places: "450.00"
+- Currency codes are ISO 4217: NOK, USD, EUR
+- Error codes are lowercase with underscores: validation_error
+- State transitions: draft → submitted → approved/rejected → paid
+- All requests require X-API-Key header
+```

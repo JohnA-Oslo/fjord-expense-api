@@ -1,0 +1,25 @@
+.md-tabs__list {
+  margin-left: 12.7rem !important;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  color: #013f86 !important;
+#  font-weight: bold !important;
+}
+
+.md-header {
+  background: linear-gradient(135deg, #1a1a1a 0%, #5f5f60 100%) !important;
+}
+
+.md-tabs {
+  background: linear-gradient(135deg, #1a1a1a 0%, #5f5f60 100%) !important;
+}
+
+.md-footer {
+  background: linear-gradient(135deg, #1a1a1a 0%, #5f5f60 100%) !important;
+}
+
+.md-footer-bg-color--dark {
+  background: linear-gradient(135deg, #1a1a1a 0%, #a7b8d5 100%) !important;
+}
