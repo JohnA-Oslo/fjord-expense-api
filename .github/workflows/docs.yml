@@ -28,6 +28,18 @@ jobs:
           pip install mkdocs-material
           pip install mkdocs-swagger-ui-tag
 
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --exclude 'https://api.fjordexpense.example.com/.*'
+            --exclude 'https://sandbox.fjordexpense.example.com/.*'
+            --exclude 'mailto:.*@fjordexpense.example.com'
+            --exclude 'https://github.com/yourusername/.*'
+            --accept 200,204,429
+            'docs/**/*.md'
+          fail: true
+
       - name: Install Vale
         run: |
           wget https://github.com/errata-ai/vale/releases/download/v3.0.7/vale_3.0.7_Linux_64-bit.tar.gz
