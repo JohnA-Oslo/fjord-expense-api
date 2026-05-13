@@ -18,13 +18,13 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 │   ├── errors.md                       # Error handling guide
 │   ├── getting-started/
 │   │   ├── authentication.md           # Authentication guide
-│   │   ├── quickstart.md              # Quick start
-│   │   └── rate-limits.md             # Rate limits
+│   │   ├── quickstart.md               # Quick start
+│   │   └── rate-limits.md              # Rate limits
 │   ├── guides/
-│   │   ├── expenses.md                # Complete expense guide
-│   │   ├── receipts.md                # Receipts guide 
-│   │   ├── approvals.md               # Approvals guide 
-│   │   └── invoicing.md               # Invoicing guide 
+│   │   ├── expenses.md                 # Complete expense guide
+│   │   ├── receipts.md                 # Receipts guide 
+│   │   ├── approvals.md                # Approvals guide 
+│   │   └── invoicing.md                # Invoicing guide 
 │   └── webhooks.md                     # Webhooks guide 
 ```
 
@@ -33,7 +33,7 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 - mkdocs-material
 - mkdocs-swagger-ui-tag
 
-## What's included
+## What's covered
 
 **Complete:**
 - OpenAPI specification (18 endpoints)
@@ -42,6 +42,11 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 - Error handling documentation
 - Complete expense management guide
 - API reference page (auto-generated)
+
+## Deployment:
+Deploys to:
+
+https://johna-oslo.github.io/fjord-expense-api/
 
 ## Notes
 
