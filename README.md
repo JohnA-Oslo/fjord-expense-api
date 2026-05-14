@@ -4,11 +4,12 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 
 - MkDocs and slightly customized Material theme.
 - Vale to check against Microsoft style guidelines.
-- Claude Code and Skills for rules checking prior to pushing changes to remote. 
+- Lychee to check links.
+- Claude Code and Skills for rules checking prior to pushing changes to remote.
 
 ## Project structure
 
-```
+```text
 .
 ├── mkdocs.yml                          # MkDocs configuration
 ├── fjord-expense-api_revised.yaml      # OpenAPI specification
@@ -28,7 +29,7 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 │   └── webhooks.md                     # Webhooks guide 
 ```
 
-## Dependencies:
+## Dependencies
 
 - mkdocs-material
 - mkdocs-swagger-ui-tag
@@ -36,6 +37,7 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 ## What's covered
 
 **Complete:**
+
 - OpenAPI specification (18 endpoints)
 - Home page with overview
 - Authentication documentation
@@ -43,10 +45,11 @@ Playground and demo API doc site for testing out ideas etc. Uses:
 - Complete expense management guide
 - API reference page (auto-generated)
 
-## Deployment:
+## Deployment
+
 Deploys to:
 
-https://johna-oslo.github.io/fjord-expense-api/
+**[Live GItHub Pages site](https://johna-oslo.github.io/fjord-expense-api/)**
 
 ## Notes
 
