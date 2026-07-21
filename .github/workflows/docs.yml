@@ -35,7 +35,6 @@ jobs:
             --exclude 'https://api.fjordexpense.example.com/.*'
             --exclude 'https://sandbox.fjordexpense.example.com/.*'
             --exclude 'mailto:.*@fjordexpense.example.com'
-            --exclude 'https://github.com/yourusername/.*'
             --accept 200,204,429
             'docs/**/*.md'
           fail: true
@@ -50,8 +49,7 @@ jobs:
         run: vale sync
 
       - name: Run Vale
-        run: vale docs/
-        continue-on-error: true
+        run: vale --minAlertLevel=error docs/
 
       - name: Build documentation
         run: mkdocs build --strict
