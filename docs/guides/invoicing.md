@@ -18,7 +18,7 @@ Invoice `status` values:
 - `overdue` (past due date, automatically set when `due_date` is passed and `status` is still sent)
 - `cancelled` (cancelled)
 
-The API returns `409 Conflict` if you attempt an invalid state transition (for example, sending an invoice that is already `sent` or `cancelled`).
+The API returns `409 Conflict` if you attempt an invalid state transition (for example, sending an invoice that's already `sent` or `cancelled`).
 
 ## List approved expenses to invoice
 
