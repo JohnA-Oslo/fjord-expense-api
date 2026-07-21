@@ -49,4 +49,4 @@ Complete endpoint documentation is available in the [API Reference](api-referenc
 
 For questions or issues with this demonstration API:
 
-- **GitHub:** [github.com/JohnA-Oslo/fjord-expense-api](https://github.com/yourusername/fjord-expense-api)
+- **GitHub:** [github.com/JohnA-Oslo/fjord-expense-api](https://github.com/JohnA-Oslo/fjord-expense-api)
