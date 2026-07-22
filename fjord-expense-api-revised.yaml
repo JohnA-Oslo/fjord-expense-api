@@ -1,0 +1,1521 @@
+openapi: 3.1.0
+info:
+  title: Fjord Expense API
+  version: 1.0.0
+  description: 'The Fjord Expense API enables organizations to manage employee expenses, receipts, approvals, and invoice generation.
+
+
+    This is a demo API created to showcase technical documentation capabilities related to API documentation.
+
+    '
+  contact:
+    name: API Support
+    email: api@fjordexpense.example.com
+servers:
+- url: https://api.fjordexpense.example.com/v1
+  description: Production server
+- url: https://sandbox.fjordexpense.example.com/v1
+  description: Sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Expenses
+  description: Manage expense entries
+- name: Receipts
+  description: Upload and manage receipt attachments
+- name: Approvals
+  description: Expense approval workflows
+- name: Reports
+  description: Expense reports and summaries
+- name: Invoices
+  description: Generate invoices from approved expenses
+- name: Categories
+  description: Expense categories and classification
+- name: Webhooks
+  description: Event notifications
+paths:
+  /expenses:
+    get:
+      tags:
+      - Expenses
+      summary: List expenses
+      description: Retrieve a paginated list of expenses with optional filtering
+      parameters:
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - draft
+          - submitted
+          - approved
+          - rejected
+          - paid
+      - name: employee_id
+        in: query
+        schema:
+          type: string
+      - name: from_date
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: to_date
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: category_id
+        in: query
+        schema:
+          type: string
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+          maximum: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Expense'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: listExpenses
+    post:
+      tags:
+      - Expenses
+      summary: Create an expense
+      description: Create a new expense entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCreate'
+      responses:
+        '201':
+          description: Expense created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: createExpense
+  /expenses/{expense_id}:
+    get:
+      tags:
+      - Expenses
+      summary: Get an expense
+      description: Retrieve details of a specific expense
+      parameters:
+      - name: expense_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: getExpense
+    patch:
+      tags:
+      - Expenses
+      summary: Update an expense
+      description: Update an existing expense. Only expenses in draft status can be updated.
+      parameters:
+      - name: expense_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseUpdate'
+      responses:
+        '200':
+          description: Expense updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: updateExpense
+    delete:
+      tags:
+      - Expenses
+      summary: Delete an expense
+      description: Delete an expense. Only expenses in draft status can be deleted.
+      parameters:
+      - name: expense_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Expense deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: deleteExpense
+  /expenses/{expense_id}/submit:
+    post:
+      tags:
+      - Expenses
+      summary: Submit an expense for approval
+      description: Submit an expense for approval. Expense must be in draft status and have at least one receipt attached.
+      parameters:
+      - name: expense_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Expense submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      operationId: submitExpense
+  /expenses/bulk:
+    post:
+      tags:
+      - Expenses
+      summary: Create multiple expenses
+      description: Create multiple expense entries in a single request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expenses:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ExpenseCreate'
+                  maxItems: 100
+      responses:
+        '201':
+          description: Expenses created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Expense'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                        error:
+                          type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: bulkCreateExpenses
+  /receipts:
+    post:
+      tags:
+      - Receipts
+      summary: Upload a receipt
+      description: Upload a receipt image or PDF. Maximum file size is 10MB.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                expense_id:
+                  type: string
+                  description: Optional expense ID to attach receipt to
+      responses:
+        '201':
+          description: Receipt uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '413':
+          description: File too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: createReceipt
+  /receipts/{receipt_id}:
+    get:
+      tags:
+      - Receipts
+      summary: Get a receipt
+      description: Retrieve receipt metadata
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: getReceipt
+    delete:
+      tags:
+      - Receipts
+      summary: Delete a receipt
+      description: Delete a receipt. Cannot delete receipts attached to submitted expenses.
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Receipt deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: deleteReceipt
+  /receipts/{receipt_id}/download:
+    get:
+      tags:
+      - Receipts
+      summary: Download a receipt file
+      description: Download the original receipt file
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Receipt file
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: downloadReceipt
+  /approvals:
+    get:
+      tags:
+      - Approvals
+      summary: List pending approvals
+      description: Get expenses pending approval for the authenticated user
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Approval'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: listApprovals
+  /approvals/{approval_id}/approve:
+    post:
+      tags:
+      - Approvals
+      summary: Approve an expense
+      description: Approve a pending expense
+      parameters:
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Expense approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approval'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      operationId: approveApproval
+  /approvals/{approval_id}/reject:
+    post:
+      tags:
+      - Approvals
+      summary: Reject an expense
+      description: Reject a pending expense
+      parameters:
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - reason
+              properties:
+                reason:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Expense rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approval'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      operationId: rejectApproval
+  /reports:
+    get:
+      tags:
+      - Reports
+      summary: List expense reports
+      description: Retrieve a list of generated expense reports
+      parameters:
+      - name: employee_id
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - draft
+          - submitted
+          - approved
+          - paid
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: listReports
+    post:
+      tags:
+      - Reports
+      summary: Generate an expense report
+      description: Generate a new expense report from a set of approved expenses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - expense_ids
+              properties:
+                expense_ids:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Report generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: createReport
+  /reports/{report_id}:
+    get:
+      tags:
+      - Reports
+      summary: Get a report
+      description: Retrieve details of a specific expense report
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: getReport
+  /reports/{report_id}/pdf:
+    get:
+      tags:
+      - Reports
+      summary: Download report as PDF
+      description: Download the expense report as a PDF file
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: PDF file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: downloadReportPdf
+  /invoices:
+    post:
+      tags:
+      - Invoices
+      summary: Create an invoice
+      description: Generate an invoice from approved expenses for a specific client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - client_id
+              - expense_ids
+              properties:
+                client_id:
+                  type: string
+                expense_ids:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                due_date:
+                  type: string
+                  format: date
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Invoice created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: createInvoice
+    get:
+      tags:
+      - Invoices
+      summary: List invoices
+      description: Retrieve a list of invoices
+      parameters:
+      - name: client_id
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - draft
+          - sent
+          - paid
+          - overdue
+          - cancelled
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoice'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: listInvoices
+  /invoices/{invoice_id}:
+    get:
+      tags:
+      - Invoices
+      summary: Get an invoice
+      description: Retrieve details of a specific invoice
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: getInvoice
+  /invoices/{invoice_id}/send:
+    post:
+      tags:
+      - Invoices
+      summary: Send an invoice
+      description: Send an invoice to the client via email
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Invoice sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      operationId: sendInvoice
+  /categories:
+    get:
+      tags:
+      - Categories
+      summary: List expense categories
+      description: Retrieve all available expense categories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: listCategories
+  /categories/{category_id}:
+    get:
+      tags:
+      - Categories
+      summary: Get a category
+      description: Retrieve details of a specific category
+      parameters:
+      - name: category_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: getCategory
+  /webhooks:
+    post:
+      tags:
+      - Webhooks
+      summary: Create a webhook
+      description: Register a webhook endpoint to receive event notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              - events
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - expense.created
+                    - expense.submitted
+                    - expense.approved
+                    - expense.rejected
+                    - invoice.created
+                    - invoice.sent
+                    - invoice.paid
+      responses:
+        '201':
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: createWebhook
+    get:
+      tags:
+      - Webhooks
+      summary: List webhooks
+      description: Retrieve all registered webhooks
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: listWebhooks
+  /webhooks/{webhook_id}:
+    delete:
+      tags:
+      - Webhooks
+      summary: Delete a webhook
+      description: Remove a webhook endpoint
+      parameters:
+      - name: webhook_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Webhook deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: deleteWebhook
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication. Include in all requests as `X-API-Key` header.
+  schemas:
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+          example: exp_1a2b3c4d5e
+        employee_id:
+          type: string
+          example: emp_abc123
+        category_id:
+          type: string
+          example: cat_travel
+        amount:
+          type: string
+          pattern: ^\d+(\.\d{1,2})?$
+          example: '450.00'
+          description: Amount in major currency units with up to 2 decimal places.
+        currency:
+          type: string
+          example: NOK
+          description: ISO 4217 currency code.
+          pattern: ^[A-Z]{3}$
+        date:
+          type: string
+          format: date
+          example: '2025-01-10'
+        description:
+          type: string
+          example: Client meeting in Bergen
+        merchant:
+          type: string
+          example: NSB
+        status:
+          type: string
+          enum:
+          - draft
+          - submitted
+          - approved
+          - rejected
+          - paid
+          example: approved
+        receipt_ids:
+          type: array
+          items:
+            type: string
+          example:
+          - rec_xyz789
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ExpenseCreate:
+      type: object
+      required:
+      - category_id
+      - amount
+      - currency
+      - date
+      - description
+      properties:
+        category_id:
+          type: string
+        amount:
+          type: string
+          pattern: ^\d+(\.\d{1,2})?$
+          description: Amount in major currency units with up to 2 decimal places.
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: ISO 4217 currency code.
+          pattern: ^[A-Z]{3}$
+          example: NOK
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          maxLength: 500
+        merchant:
+          type: string
+          maxLength: 200
+    ExpenseUpdate:
+      type: object
+      properties:
+        category_id:
+          type: string
+        amount:
+          type: string
+          pattern: ^\d+(\.\d{1,2})?$
+          description: Amount in major currency units with up to 2 decimal places.
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        merchant:
+          type: string
+    Receipt:
+      type: object
+      properties:
+        id:
+          type: string
+          example: rec_xyz789
+        expense_id:
+          type: string
+          example: exp_1a2b3c4d5e
+        filename:
+          type: string
+          example: receipt_2025-01-10.pdf
+        content_type:
+          type: string
+          example: application/pdf
+        size:
+          type: integer
+          description: File size in bytes
+          example: 245678
+        url:
+          type: string
+          format: uri
+          example: https://api.fjordexpense.example.com/v1/receipts/rec_xyz789/download
+        uploaded_at:
+          type: string
+          format: date-time
+    Approval:
+      type: object
+      properties:
+        id:
+          type: string
+          example: appr_def456
+        expense_id:
+          type: string
+        expense:
+          $ref: '#/components/schemas/Expense'
+        approver_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - pending
+          - approved
+          - rejected
+        comment:
+          type: string
+        approved_at:
+          type: string
+          format: date-time
+        rejected_at:
+          type: string
+          format: date-time
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          example: rpt_ghi789
+        employee_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        total_amount:
+          type: string
+          pattern: ^\d+(\.\d{1,2})?$
+          example: '1250.50'
+          description: Amount in major currency units with up to 2 decimal places.
+        currency:
+          type: string
+          description: ISO 4217 currency code.
+          pattern: ^[A-Z]{3}$
+          example: NOK
+        expense_count:
+          type: integer
+        status:
+          type: string
+          enum:
+          - draft
+          - submitted
+          - approved
+          - paid
+        created_at:
+          type: string
+          format: date-time
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          example: inv_jkl012
+        invoice_number:
+          type: string
+          example: INV-2025-001
+        client_id:
+          type: string
+        total_amount:
+          type: string
+          pattern: ^\d+(\.\d{1,2})?$
+          example: '1250.50'
+          description: Amount in major currency units with up to 2 decimal places.
+        currency:
+          type: string
+          description: ISO 4217 currency code.
+          pattern: ^[A-Z]{3}$
+          example: NOK
+        due_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+          - draft
+          - sent
+          - paid
+          - overdue
+          - cancelled
+        expense_ids:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        sent_at:
+          type: string
+          format: date-time
+        paid_at:
+          type: string
+          format: date-time
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cat_travel
+        name:
+          type: string
+          example: Travel
+        description:
+          type: string
+        icon:
+          type: string
+          example: airplane
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          example: hook_mno345
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+        has_more:
+          type: boolean
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - request_id
+          properties:
+            code:
+              type: string
+              example: validation_error
+              description: Machine-readable error code.
+            message:
+              type: string
+              example: One or more fields are invalid.
+            request_id:
+              type: string
+              example: req_8f3c1a2b
+              description: Correlation ID for support/debugging.
+            details:
+              type: array
+              description: Optional list of field-level or contextual error details.
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: amount
+                  issue:
+                    type: string
+                    example: must match pattern ^\d+(\.\d{1,2})?$
+                  value:
+                    nullable: true
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: bad_request
+              message: Invalid request parameters
+              request_id: req_8f3c1a2b
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: unauthorized
+              message: Invalid or missing API key
+              request_id: req_8f3c1a2b
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: not_found
+              message: Resource not found
+              request_id: req_8f3c1a2b
+    Conflict:
+      description: Conflict - operation not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: conflict
+              message: Cannot modify expense in current status
+              request_id: req_8f3c1a2b
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: validation_error
+              message: Invalid input data
+              details:
+               - field: amount
+                 issue: Must be greater than 0
+                 value: null
+               - field: currency
+                 issue: Must be a valid ISO 4217 currency code
+                 value: "US"
+              request_id: req_8f3c1a2b
+    RateLimitExceeded:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limit_exceeded
+              message: Too many requests
+              request_id: req_8f3c1a2b
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: forbidden
+              message: You do not have access to this resource.
+              request_id: req_8f3c1a2b
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: internal_server_error
+              message: An unexpected error occurred.
+              request_id: req_8f3c1a2b
