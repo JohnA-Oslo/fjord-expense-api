@@ -28,7 +28,7 @@ Use `GET /expenses?status=approved` to find expenses ready to invoice. See [Mana
 
 Use `POST /invoices` to generate an invoice from approved expenses for a specific client.
 
-**Note:** An expense can only be included in one invoice. If you attempt to create an invoice with an expense that is already been invoiced, the API returns `422 Unprocessable Entity` with details indicating which expenses are unavailable.
+**Note:** An expense can only be included in one invoice. If you attempt to create an invoice with an expense that's already been invoiced, the API returns `422 Unprocessable Entity` with details indicating which expenses are unavailable.
 
 The error response in this case looks like this:
 
