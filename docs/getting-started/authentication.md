@@ -11,7 +11,7 @@ API keys are generated through the Fjord Expense dashboard:
 3. Click **Generate New Key**
 4. Copy the key immediately - it will only be shown once
 
-Store your API key securely. Do not commit it to version control or expose it in client-side code.
+Store your API key securely. Don't commit it to version control or expose it in client-side code.
 
 ## Using your API key
 

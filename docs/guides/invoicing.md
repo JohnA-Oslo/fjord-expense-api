@@ -4,7 +4,7 @@ The invoicing endpoints let you generate invoices from approved expenses, retrie
 
 ## Before you begin
 
-Invoices are generated from approved expenses. You'll typically list expenses with `status=approved`, then create an invoice using the returned expense IDs.
+Invoices are generated from approved expenses. You will typically list expenses with `status=approved`, then create an invoice using the returned expense IDs.
 
 For authentication and environment details, see [Authentication](../getting-started/authentication.md).
 
@@ -18,7 +18,7 @@ Invoice `status` values:
 - `overdue` (past due date, automatically set when `due_date` is passed and `status` is still sent)
 - `cancelled` (cancelled)
 
-The API returns `409 Conflict` if you attempt an invalid state transition (for example, sending an invoice that is already `sent` or `cancelled`).
+The API returns `409 Conflict` if you attempt an invalid state transition (for example, sending an invoice that's already `sent` or `cancelled`).
 
 ## List approved expenses to invoice
 

@@ -4,7 +4,7 @@ The approval endpoints let managers review and approve or reject submitted expen
 
 ## Before you begin
 
-Approvals are only accessible to users with manager permissions. Employee users can submit expenses for approval but cannot access approval endpoints.
+Approvals are only accessible to users with manager permissions. Employee users can submit expenses for approval but can't access approval endpoints.
 
 For authentication and environment details, see [Authentication](../getting-started/authentication.md).
 
@@ -18,7 +18,7 @@ Approval `status` values:
 - `approved` - Manager approved the expense
 - `rejected` - Manager rejected the expense
 
-Once an approval is `approved` or `rejected`, it cannot be changed. The employee must create a new expense if corrections are needed.
+Once an approval is `approved` or `rejected`, it can't be changed. The employee must create a new expense if corrections are needed.
 
 ## List pending approvals
 
