@@ -4,6 +4,8 @@ site_author: John Anderson
 copyright: Copyright &copy; 2025 Fjord Enterprises
 site_url: https://john.anderson.github.io/fjord-expense-api
 edit_uri: ""
+hooks:
+  - hooks.py
 extra_css:
   - stylesheets/extra.css
 
