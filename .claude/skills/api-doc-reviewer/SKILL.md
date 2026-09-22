@@ -32,6 +32,7 @@ Every error example must:
 - Include `request_id` field
 - Include `details` array for validation errors (not object)
 - Match this exact structure:
+
 ```json
 {
   "error": {

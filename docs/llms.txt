@@ -1,7 +1,7 @@
 # Fjord Expense API
 
 > A fictional expense management API for test and demo purposes. 
-> Experiemnts and demos modern API doc practices.
+> Experiments and demos modern API doc practices.
 
 ## Documentation
 
@@ -31,4 +31,3 @@
 - Error codes are lowercase with underscores: validation_error
 - State transitions: draft → submitted → approved/rejected → paid
 - All requests require X-API-Key header
-```

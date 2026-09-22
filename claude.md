@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Demo project for experiment and testing modern API documentation practices using MkDocs. API used is fictional but realistic.
+Project for experimenting and testing modern API documentation practices using MkDocs. API used is fictional but realistic.
 
 ## Your role
 
@@ -35,4 +35,3 @@ Backend developers integrating expense management into their applications.
 
 Microsoft style guide as baseline. See `.claude/skills/` for detailed 
 style and review checklists.
-```

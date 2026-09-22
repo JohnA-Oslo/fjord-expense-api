@@ -8,8 +8,8 @@ This is a demo API documentation project using modern technical writing practice
 
 - **API documentation** - Documentation for a fictional expense management API
 - **OpenAPI 3.1 specification** - Based on fictional API spec with 18 endpoints
-- **MkDocs Material** - MkDocs static site generation with custom styling
-- **Quality automation** - Layered approach using deterministic and AI tools
+- **MkDocs Material** - MkDocs static site generation with Material themse with some custom styling
+- **Quality automation** - Layered approach using deterministic (Vale, Lychee) and AI tools
 - **CI/CD pipeline** - GitHub Actions for automated validation and deployment
 - **Enterprise workflow** - Automated quality checks and deployment practices
 
@@ -95,4 +95,4 @@ mkdocs gh-deploy
 
 ## Notes
 
-This is a demo project used for demo and testing purposes. The Fjord Expense API is fictional but realistic.
+This is a demo project used for demo and testing purposes. The Fjord Expense API is fictional but realistic, with the endpoint names changed to protect the guilty.
