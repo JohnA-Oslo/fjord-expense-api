@@ -1,8 +1,8 @@
-# Fjord expense API documentation
+# Fjord Expense API documentation
 
 The Fjord Expense API provides programmatic access to expense management, receipt handling, approval workflows, and invoice generation.
 
-This is a demo API created as a playground and to experiment with various technical documentation capabilities around API documentation.
+This is a sample fictional API created as a playground and to experiment with various technical documentation capabilities around API documentation.
 
 ## Overview
 
