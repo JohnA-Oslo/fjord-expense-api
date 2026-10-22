@@ -7,7 +7,7 @@ This is a demo API documentation project using modern technical writing practice
 ## What this includes
 
 - **API documentation** - Documentation for a fictional expense management API
-- **OpenAPI 3.1 specification** - Based on fictional API spec with 18 endpoints
+- **OpenAPI 3.1 specification** - Covers expenses, receipts, approvals, reports, invoices, categories, and webhooks
 - **MkDocs Material** - MkDocs static site generation with Material themse with some custom styling
 - **Quality automation** - Layered approach using deterministic (Vale, Lychee) and AI tools
 - **CI/CD pipeline** - GitHub Actions for automated validation and deployment

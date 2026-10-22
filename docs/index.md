@@ -3,10 +3,10 @@
 The Fjord Expense API provides programmatic access to expense management, receipt handling, approval workflows, and invoice generation.
 
 !!! note "About this sample"
-    Fjord Expense is a fictional API with 18 endpoints and is created to:
+    Fjord Expense is a fictional API that has been created to:
 
     - Demo how I structure, write and publish API documentation.
-    - Provide a playground to experiment with various  tools and techniques.
+    - Provide a playground to experiment with various tools and techniques.
 
 ## Overview
 
