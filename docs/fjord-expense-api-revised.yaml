@@ -28,7 +28,7 @@ tags:
 - name: Reports
   description: Expense reports and summaries
 - name: Invoices
-  description: Generate invoices from approved expenses
+  description: Generate invoices from approved or paid expenses
 - name: Categories
   description: Expense categories and classification
 - name: Webhooks
@@ -617,15 +617,6 @@ paths:
         in: query
         schema:
           type: string
-      - name: status
-        in: query
-        schema:
-          type: string
-          enum:
-          - draft
-          - submitted
-          - approved
-          - paid
       - name: limit
         in: query
         schema:
@@ -774,7 +765,7 @@ paths:
       tags:
       - Invoices
       summary: Create an invoice
-      description: Generate an invoice from approved expenses for a specific client
+      description: Generate an invoice for a specific client from expenses with the status `approved` or `paid`
       requestBody:
         required: true
         content:
@@ -1290,13 +1281,6 @@ components:
           example: NOK
         expense_count:
           type: integer
-        status:
-          type: string
-          enum:
-          - draft
-          - submitted
-          - approved
-          - paid
         created_at:
           type: string
           format: date-time

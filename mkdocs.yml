@@ -56,6 +56,7 @@ nav:
     - Quick start: getting-started/quickstart.md
     - Authentication: getting-started/authentication.md
     - Rate limits: getting-started/rate-limits.md
+  - Concepts: concepts.md
   - Guides:
     - Managing expenses: guides/expenses.md
     - Working with receipts: guides/receipts.md

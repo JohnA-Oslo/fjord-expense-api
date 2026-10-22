@@ -4,7 +4,7 @@ The invoicing endpoints let you generate invoices from approved expenses, retrie
 
 ## Before you begin
 
-Invoices are generated from approved expenses. You will typically list expenses with `status=approved`, then create an invoice using the returned expense IDs.
+Invoices are generated from expenses with the status `approved` or `paid`. Invoicing doesn't change an expense's status, so an expense can be both reimbursed and invoiced. You will typically list expenses with `status=approved` and `status=paid`, then create an invoice using the returned expense IDs.
 
 For authentication and environment details, see [Authentication](../getting-started/authentication.md).
 
@@ -22,11 +22,11 @@ The API returns `409 Conflict` if you attempt an invalid state transition (for e
 
 ## List approved expenses to invoice
 
-Use `GET /expenses?status=approved` to find expenses ready to invoice. See [Managing Expenses](expenses.md#listing-your-expenses) for filtering and pagination details.
+Use `GET /expenses?status=approved` to find expenses ready to invoice. The `status` filter takes one value, so make a second request with `status=paid` to include reimbursed expenses. See [Managing Expenses](expenses.md#listing-your-expenses) for filtering and pagination details.
 
 ## Create an invoice
 
-Use `POST /invoices` to generate an invoice from approved expenses for a specific client.
+Use `POST /invoices` to generate an invoice for a specific client from expenses with the status `approved` or `paid`.
 
 **Note:** An expense can only be included in one invoice. If you attempt to create an invoice with an expense that's already been invoiced, the API returns `422 Unprocessable Entity` with details indicating which expenses are unavailable.
 
