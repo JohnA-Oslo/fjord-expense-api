@@ -1,7 +1,7 @@
 site_name: Fjord Expense API documentation
 site_description: API documentation for Fjord Expense - demo project
 site_author: John Anderson
-copyright: Copyright &copy; 2025 Fjord Enterprises
+copyright: Copyright &copy; 2025 Anderson Technical Communications
 site_url: https://johna-oslo.github.io/fjord-expense-api
 edit_uri: ""
 hooks:
