@@ -8,9 +8,9 @@ START_YEAR = 2025
 def on_config(config, **kwargs):
     """Set the footer copyright string with a dynamic end year.
 
-    Produces "Copyright &copy; 2025 Fjord Enterprises" while the current
-    year is the start year, and "Copyright &copy; 2025-<year> Fjord
-    Enterprises" once the build happens in a later year.
+    Produces "Copyright &copy; 2025 Anderson Technical Communications" while the current
+    year is the start year, and "Copyright &copy; 2025-<year> Anderson Technical Communications"
+    once the build happens in a later year.
     """
     current_year = datetime.now().year
 
