@@ -1,0 +1,48 @@
+.md-tabs__list {
+  color: aliceblue !important;
+  margin-left: 12.7rem !important;
+}
+
+.md-tabs__item {
+  color: aliceblue !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold !important;
+}
+
+/* Light mode headings and nav — brand blue, ~8.4:1 contrast on white */
+[data-md-color-scheme="default"] h1,
+[data-md-color-scheme="default"] h2,
+[data-md-color-scheme="default"] h3,
+[data-md-color-scheme="default"] h4,
+[data-md-color-scheme="default"] h5,
+[data-md-color-scheme="default"] h6,
+[data-md-color-scheme="default"] .md-nav__title,
+[data-md-color-scheme="default"] .md-nav.md-nav--secondary {
+  color: #094c98 !important;
+}
+
+/* Dark mode headings and nav — lighter accent blue, ~5.0:1 contrast on the dark background */
+[data-md-color-scheme="slate"] h1,
+[data-md-color-scheme="slate"] h2,
+[data-md-color-scheme="slate"] h3,
+[data-md-color-scheme="slate"] h4,
+[data-md-color-scheme="slate"] h5,
+[data-md-color-scheme="slate"] h6,
+[data-md-color-scheme="slate"] .md-nav__title,
+[data-md-color-scheme="slate"] .md-nav.md-nav--secondary {
+  color: #2094f3 !important;
+}
+
+.md-header {
+  background-color: #094c98 !important;
+}
+
+.md-tabs {
+  background-color: #094c98 !important;
+}
+
+.md-footer {
+  background-color: #094c98 !important;
+}
