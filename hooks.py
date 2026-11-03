@@ -19,6 +19,5 @@ def on_config(config, **kwargs):
     else:
         years = str(START_YEAR)
 
-    config["copyright"] = f"Copyright &copy; {years} Fjord Enterprises"
-
+    config["copyright"] = f"Copyright &copy; {years} Anderson Technical Communications"
     return config
